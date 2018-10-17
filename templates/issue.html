@@ -42,26 +42,31 @@
 					</ul>
 				{% else %}
 					<ol>
-						{% for i in self_list %}
+						{% if self_list != None %}
+							{% for i in self_list %}
+								{% if i != None %}
+									<li>{{i}}</li>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							{{issue_info.TreatmentDescription}}
+						{% endif %}
+					</ol>
+				{% endif %}
+			</li>
+			{% if medicine_list != None %}
+			<li>
+				
+					Medication : <br>
+					<ol>			
+						{% for i in medicine_list %}
 							{% if i != None %}
 								<li>{{i}}</li>
 							{% endif %}
 						{% endfor %}
 					</ol>
-				
-
-				{% endif %}
 			</li>
-			<li>
-				Medication : <br>
-				<ol>
-					{% for i in medicine_list %}
-						{% if i != None %}
-							<li>{{i}}</li>
-						{% endif %}
-					{% endfor %}
-				</ol>
-			</li>
+			{% endif %}
 		</ul>
 		<h4>If seeking a doctor, lookout for one with Specialisation in one of these:</h4>
 		<ul>		

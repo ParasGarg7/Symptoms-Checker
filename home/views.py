@@ -84,12 +84,7 @@ def issue(request):
         }
     r = request.POST.get('issue')
     issue = ast.literal_eval(r)
-    print("____")
-    print("Issue")
-    print(issue)
     issue_info = get_issue_info(issue['Issue']['ID'])
-    print("issue_info")
-    print(issue_info)
     profname = issue['Issue']['ProfName']
     issuename = issue['Issue']['Name']
     ##### Finding on NHS
@@ -97,7 +92,6 @@ def issue(request):
     soup = bsp(page.text,'html.parser')
     if soup.find(class_='no-results-wrap pad') == None:
         href = "https://www.nhs.uk" + soup.find(onclick="dcsMultiTrack('WT.cd','1')").get('href')
-        print(href)
         page_issue = requests.get(href)
         soup_issue = bsp(page_issue.text,'html.parser')    
         if soup_issue.find_all(id='things-you-can-try'):
@@ -117,7 +111,6 @@ def issue(request):
                     "dos_list":dos_list,
                     "donts_list":donts_list,
                     })
-
             else:
                 self_care = treatment.get('p')
                 self_list = []
@@ -127,24 +120,20 @@ def issue(request):
             medicine_list = []
             for i in medicine.find_all('p'):
                 medicine_list.append(i.string)
+            context.update({
+                "self_care":self_care,
+                "self_list":self_list,
+                "medicine_list":medicine_list,
+                "issuename":issuename,    
+                "specialisation":issue['Specialisation'],
+                })
         else:
-            treatment = {}
-            self_list = []
-            self_care = ""
-            medicine_list = []
-
-        context.update({
-            "issuename":issuename,
-            "treatment":treatment,
-            "self_care":self_care,
-            "self_list":self_list,
-            "medicine_list":medicine_list,
-            "specialisation":issue['Specialisation'],
+            context.update({
+                "issuename":issuename,    
+                "specialisation":issue['Specialisation'],
             })
     else : 
         page = requests.get('https://www.nhs.uk/search/?collection=nhs-meta&q='+issuename)
-        print("___")
-        print("In else of issuename")
         context.update({
             "issuename":issuename,
             "issue_info":issue_info,

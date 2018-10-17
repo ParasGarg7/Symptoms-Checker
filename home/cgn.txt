@@ -1,0 +1,94 @@
+/*
+mkdir data
+echo "mongod --dbpath=data --nojournal" > mongod
+chmod a+x mongod*/
+
+var crypto = require('crypto'),
+    secret_key = "priyanshu200198@gmail.com",
+    password = "j8M5Eko2Y6NpGy34S",
+    express = require("express"),
+    CryptoJS = require('crypto-js'),
+    app = express(),
+    request = require('request'),
+    bodyParser = require("body-parser"),
+    mongoose    = require("mongoose");
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.set("view engine", "ejs");
+mongoose.connect("mongodb://localhost:27017/symptoms_data");
+
+var uri = "https://sandbox-authservice.priaid.ch/login",
+    computedHash = CryptoJS.HmacMD5(uri, password),
+    computedHashString = computedHash.toString(CryptoJS.enc.Base64),
+    auth = 'Bearer ' + secret_key + ':' + computedHashString,
+    url = "https://sandbox-authservice.priaid.ch/login",
+    token;
+
+request.post({
+    url : url,
+    headers : 
+        {
+            "Host": 'sandbox-authservice.priaid.ch',
+            "Authorization" : auth
+        } 
+    },function(error, response, body) 
+        {
+          var data = JSON.parse(body);
+              token = data["Token"];
+              console.log(token);
+        });
+var symptoms_schema = new mongoose.Schema({
+   id: Number,
+   name: String
+   });
+
+var sym_data = mongoose.model("Campground", symptoms_schema);
+app.get("/", function(req, res)
+    {
+      var url = "https://sandbox-healthservice.priaid.ch/symptoms?token="+token+"&language=de-ch";
+      var c=0;
+      request(url, function(error, response, body)
+        {
+            if(!error && response.statusCode == 200) 
+              {
+                  var symptoms = JSON.parse(body);
+                  //console.log(symptoms);
+                  //console.log(symptoms[2].Name);
+                  /*symptoms.foreach(function(symptom)*/
+                  for(var i in symptoms)
+                    {
+                      //console.log(symptoms[i].ID);
+                      //console.log(i);
+                      var newsymptom = {id: symptoms[i].ID, name: symptoms[i].Name}
+                      if(c!=0)
+                      {
+                        sym_data.insert(newsymptom);
+                        console.log(newsymptom);
+                      }
+                      else
+                      {
+                        sym_data.create(newsymptom, function(err, newlyCreated)
+                        {
+                            if(err)
+                              {
+                                  console.log(err);
+                              } 
+                            else 
+                              {
+                                  //redirect back to campgrounds page
+                                  // res.redirect("/campgrounds");
+                                  console.log(newsymptom);
+                              }
+                              c+=1;
+                        });
+                      } 
+                    }
+                  //res.render("output", {data: symptoms});
+              }
+        });
+    });
+
+
+app.listen(5000, function(){
+   console.log("Server Has Started!");
+});

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block head_data %}
+{% endblock %}
+
+
+{% block content %}
+	<h1>Hello {{name}}</h1>
+	<h2>Possible Diseases/Medical Condition for the Symptoms given by you are</h2>
+	<ul>
+		{% for issue in data %}
+			<li>
+				<form action="/issue" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="issue" value="{{issue}}">
+					<button type="submit">{{issue.Issue.Name}}</button>
+				</form>
+			</li>
+			{{issue}}
+		{% endfor %}
+	</ul>
+{% endblock %}

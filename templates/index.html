@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block head_data %}
+<link rel="stylesheet" type="text/css" href="{% static 'select2.min.css' %}">
+{% endblock %}
+
+{% block content %}
+	<h2>Welcome</h2>
+	<p>Please provide the following data</p>
+	<form method="post" action="/diagnosis">
+		{% csrf_token %}
+		<label>Name:</label>
+		<input type="text" name="name" value="{{ name }}"><br>
+		<label>Age</label>
+		<input type="number" name="age" value="0"><br>
+		<label>Gender</label>
+		<input type="radio" name="gender" value="male" checked>Male
+		<input type="radio" name="gender" value="female">Female
+		<input type="radio" name="gender" value="other">Other<br>
+		<label>Symptom</label>
+		<select class="select-multiple" name="symptoms[]" multiple="multiple">
+			{% for symptom in symptoms_list %}
+				<option value="{{symptom.ID}}">{{symptom.Name}}</option>
+			{% endfor %}
+		</select><br>
+		<button type="submit">Submit</button>
+	</form>
+	<script src="{% static 'select2.min.js' %}"></script>
+
+	<script>
+	$(document).ready(function() {
+		$('.select-multiple').select2({});
+		}
+	);
+</script>
+{% endblock %}
+
+
+

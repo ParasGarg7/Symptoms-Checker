@@ -1,0 +1,8 @@
+{
+  "name": "Test1",
+  "version": "0.1.0",
+  "dependencies": {
+    "select2": "^4.0.5",
+    "jquery": "^3.3.1"
+  }
+}

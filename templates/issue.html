@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% block head_data %}
+{% endblock %}
+
+
+{% block content %}
+	<h1>Hello {{name}}</h1>
+	<br><br>
+	<h3>For <u>{{issuename}},</u></h3>
+	<h4>We suggest the following:</h4>
+	{% if not issue_info %}
+		<ul>
+			<li>
+				Self-Care : <br>
+				{{self_care}}<br>
+				{% if dos_list %}
+					<ul>
+						<li>
+							<p>Do's:
+								<ul>
+									{% for i in dos_list %}
+										<li>
+											{{i}}
+										</li>
+									{% endfor %}
+								</ul>
+							</p>
+						</li>
+						<li>
+							<p>Dont's:
+								<ul>
+									{% for i in donts_list %}
+										<li>
+											{{i}}
+										</li>
+									{% endfor %}
+								</ul>
+							</p>
+						</li>
+					</ul>
+				{% else %}
+					<ol>
+						{% for i in self_list %}
+							{% if i != None %}
+								<li>{{i}}</li>
+							{% endif %}
+						{% endfor %}
+					</ol>
+				
+
+				{% endif %}
+			</li>
+			<li>
+				Medication : <br>
+				<ol>
+					{% for i in medicine_list %}
+						{% if i != None %}
+							<li>{{i}}</li>
+						{% endif %}
+					{% endfor %}
+				</ol>
+			</li>
+		</ul>
+		<h4>If seeking a doctor, lookout for one with Specialisation in one of these:</h4>
+		<ul>		
+				{% for i in specialisation %}
+					<li>
+						{{i.Name}}
+					</li>
+				{% endfor %}
+		</ul>
+	{% else %}
+		<ul>
+			<li>
+				Self care : <br>
+				{{issue_info.TreatmentDescription}}
+			</li>
+		</ul>
+		<h4>If seeking a doctor, lookout for one with Specialisation in one of these:</h4>
+		<ul>		
+				{% for i in specialisation %}
+					<li>
+						{{i.Name}}
+					</li>
+				{% endfor %}
+		</ul>
+	{% endif %}
+{% endblock %}

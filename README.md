@@ -20,7 +20,7 @@ This Project:
 This API provides user with predefined symptoms and takes user input to decide what illness does the user have.
 
 
-API ``` 127.0.0.1:8000/'```
+API ``` 127.0.0.1:8000/```
 
 Method supported: POST
 
@@ -31,7 +31,7 @@ Method supported: POST
 This API provides the user with possible illness.
 
 
-API ``` 127.0.0.1:8000/diagnosis'```
+API ``` 127.0.0.1:8000/diagnosis```
 
 Method supported: POST
 
@@ -42,7 +42,7 @@ Method supported: POST
 This API displays the user with information for the illness he selected.
 
 
-API ``` 127.0.0.1:5000/issue'```
+API ``` 127.0.0.1:5000/issue```
 
 
 ### Installation
